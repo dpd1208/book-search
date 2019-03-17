@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
@@ -12,7 +11,13 @@ class Books extends Component {
     books: [],
     title: "",
     author: "",
-    synopsis: ""
+    synopsis: "",
+    description: "",
+    image: "",
+    link: "",
+    date: "",
+    search: "",
+    hasSearched: false
   };
 
   componentDidMount() {
@@ -22,7 +27,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        this.setState({ books: [], title: "", author: "", synopsis: "", description: "", image: "", link: "", date: ""})
       )
       .catch(err => console.log(err));
   };
@@ -42,77 +47,117 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
+    if (this.state.search) {
+      console.log("Search: " + this.state.search)
+      API.search(this.state.search)
+      .then((res =>
+        this.setState({ books: res.data.items, search: "", hasSearched:true,})
+      )).then((res => console.log(this.state)
+      )).catch(err => console.log(err));
     }
   };
-
+  
+  
   render() {
+    if (!this.state.hasSearched) { 
     return (
       <Container fluid>
         <Row>
-          <Col size="md-6">
+          <Col size="md-12">
             <Jumbotron>
               <h1>What Books Should I Read?</h1>
             </Jumbotron>
             <form>
               <Input
-                value={this.state.title}
+                value={this.state.search}
                 onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
+                name="search"
+                placeholder="Search (required)"
               />
               <FormBtn
-                disabled={!(this.state.author && this.state.title)}
+                disabled={!(this.state.search)}
                 onClick={this.handleFormSubmit}
               >
-                Submit Book
+                Submit Search
               </FormBtn>
             </form>
           </Col>
-          <Col size="md-6 sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
-            {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                        {book.title} by {book.author}
-                      </strong>
-                    </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
-          </Col>
         </Row>
       </Container>
+        )
+      };
+      return (
+          <Container fluid>
+          <Row>
+            <Col size="md-12">
+              <Jumbotron>
+                <h1>What Books Should I Read?</h1>
+              </Jumbotron>
+              <form>
+                <Input
+                  value={this.state.search}
+                  onChange={this.handleInputChange}
+                  name="search"
+                  placeholder="Search (required)"
+                />
+                <FormBtn
+                  disabled={!(this.state.search)}
+                  onClick={this.handleFormSubmit}
+                >
+                  Submit Search
+                </FormBtn>
+              </form>
+            </Col>
+          </Row>
+        <Row>
+          <Col size="md-12">
+          <List>
+              <ListItem>
+              <h1>{this.state.books[0].volumeInfo.title} by {this.state.books[0].volumeInfo.authors}</h1>
+              <p>{this.state.books[0].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[1].volumeInfo.title} by {this.state.books[1].volumeInfo.authors}</h1>
+              <p>{this.state.books[1].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+                <h1>{this.state.books[2].volumeInfo.title} by {this.state.books[2].volumeInfo.authors}</h1>
+                <p>{this.state.books[2].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[3].volumeInfo.title} by {this.state.books[3].volumeInfo.authors}</h1>
+              <p>{this.state.books[3].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[4].volumeInfo.title} by {this.state.books[4].volumeInfo.authors}</h1>
+              <p>{this.state.books[4].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[5].volumeInfo.title} by {this.state.books[5].volumeInfo.authors}</h1>
+              <p>{this.state.books[5].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[6].volumeInfo.title} by {this.state.books[6].volumeInfo.authors}</h1>
+              <p>{this.state.books[6].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[7].volumeInfo.title} by {this.state.books[7].volumeInfo.authors}</h1>
+              <p>{this.state.books[7].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+              <h1>{this.state.books[8].volumeInfo.title} by {this.state.books[8].volumeInfo.authors}</h1>
+              <p>{this.state.books[8].volumeInfo.description}</p>
+            </ListItem>
+            <ListItem>
+                <h1>{this.state.books[9].volumeInfo.title} by {this.state.books[9].volumeInfo.authors}</h1>
+                <p>{this.state.books[9].volumeInfo.description}</p>
+            </ListItem>
+          </List>
+          </Col>
+        </Row>
+        </Container> 
     );
-  }
+  } 
 }
 
 export default Books;
