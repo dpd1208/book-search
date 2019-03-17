@@ -12,11 +12,9 @@ class Books extends Component {
     books: [],
     title: "",
     author: "",
-    synopsis: "",
     description: "",
     image: "",
-    link: "",
-    date: ""
+    link: ""
   };
 
   componentDidMount() {
@@ -26,7 +24,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "", description: "", image: "", link: "", date: ""})
+        this.setState({ books: res.data, title: "", author: "", description: "", image: "", link: ""})
       )
       .catch(err => console.log(err));
   };
@@ -61,7 +59,7 @@ class Books extends Component {
     return (
       <Container fluid>
         <Row>
-<           Col size="md-6 sm-12">
+<           Col size="md-12">
             <Jumbotron>
               <h1>Books On My List</h1>
             </Jumbotron>

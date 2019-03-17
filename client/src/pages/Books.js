@@ -4,14 +4,14 @@ import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
+import SaveBtn from "../components/SaveBtn";
 
 class Books extends Component {
   state = {
     books: [],
     title: "",
     author: "",
-    synopsis: "",
     description: "",
     image: "",
     link: "",
@@ -27,7 +27,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: [], title: "", author: "", synopsis: "", description: "", image: "", link: "", date: ""})
+        this.setState({ books: [], title: "", author: "", description: "", image: "", link: ""})
       )
       .catch(err => console.log(err));
   };
@@ -37,6 +37,19 @@ class Books extends Component {
       .then(res => this.loadBooks())
       .catch(err => console.log(err));
   };
+
+  saveBook = id => {
+    API.saveBook( 
+      {
+        title: this.state.title,
+        author: this.state.author,
+        description: this.state.description,
+        image: this.state.image,
+        link: this.state.link
+      })
+      .then(res => alert(this.state.title + " saved to favorites"))
+      .catch(err => console.log(err));
+      };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -111,53 +124,33 @@ class Books extends Component {
           </Row>
         <Row>
           <Col size="md-12">
-          <List>
-              <ListItem>
-              <h1>{this.state.books[0].volumeInfo.title} by {this.state.books[0].volumeInfo.authors}</h1>
-              <p>{this.state.books[0].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[1].volumeInfo.title} by {this.state.books[1].volumeInfo.authors}</h1>
-              <p>{this.state.books[1].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-                <h1>{this.state.books[2].volumeInfo.title} by {this.state.books[2].volumeInfo.authors}</h1>
-                <p>{this.state.books[2].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[3].volumeInfo.title} by {this.state.books[3].volumeInfo.authors}</h1>
-              <p>{this.state.books[3].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[4].volumeInfo.title} by {this.state.books[4].volumeInfo.authors}</h1>
-              <p>{this.state.books[4].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[5].volumeInfo.title} by {this.state.books[5].volumeInfo.authors}</h1>
-              <p>{this.state.books[5].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[6].volumeInfo.title} by {this.state.books[6].volumeInfo.authors}</h1>
-              <p>{this.state.books[6].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[7].volumeInfo.title} by {this.state.books[7].volumeInfo.authors}</h1>
-              <p>{this.state.books[7].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-              <h1>{this.state.books[8].volumeInfo.title} by {this.state.books[8].volumeInfo.authors}</h1>
-              <p>{this.state.books[8].volumeInfo.description}</p>
-            </ListItem>
-            <ListItem>
-                <h1>{this.state.books[9].volumeInfo.title} by {this.state.books[9].volumeInfo.authors}</h1>
-                <p>{this.state.books[9].volumeInfo.description}</p>
-            </ListItem>
-          </List>
+          {this.state.books.length ? (
+              <List>
+                {this.state.books.map(book => (
+                  <ListItem key={book.id}>
+                        <h1>{book.volumeInfo.title} by {book.volumeInfo.authors}</h1>
+                        <p>{book.volumeInfo.description}</p>
+                  <SaveBtn onClick={() => 
+                    this.setState({
+                        title: book.volumeInfo.title, 
+                        author: book.volumeInfo.authors, 
+                        description: book.volumeInfo.description, 
+                        image: book.volumeInfo.imageLinks.thumbnail, 
+                        link: book.volumeInfo.infoLink },
+                        () => {
+                          this.saveBook(book.id)
+                        })
+                      }/>
+                  </ListItem>
+                  ))}
+              </List>
+            ) : (
+              <h3>No Results to Display</h3>
+            )}
           </Col>
         </Row>
-        </Container> 
-    );
-  } 
-}
-
+      </Container>
+      ) 
+    };
+  }
 export default Books;
