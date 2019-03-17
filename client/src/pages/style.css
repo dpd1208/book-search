@@ -1,0 +1,12 @@
+img {
+    float: left;
+    margin: 2rem;
+}
+
+li {
+    margin: 2rem;
+}
+
+.jumbotron {
+    max-height: 1rem;
+}

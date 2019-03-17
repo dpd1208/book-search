@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
 import SaveBtn from "../components/SaveBtn";
+import "./style.css";
 
 class Books extends Component {
   state = {
@@ -128,6 +128,8 @@ class Books extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book.id}>
+                        <a href={book.volumeInfo.infoLink} target="_blank">
+                        <img src={book.volumeInfo.imageLinks.thumbnail} /></a>
                         <h1>{book.volumeInfo.title} by {book.volumeInfo.authors}</h1>
                         <p>{book.volumeInfo.description}</p>
                   <SaveBtn onClick={() => 
